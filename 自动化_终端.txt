@@ -1,0 +1,51 @@
+#1.检查当前系统架构
+uname -m
+
+#2.下载 ttyd
+wget https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.aarch64
+sudo mv ttyd.aarch64 /usr/local/bin/ttyd
+sudo chmod +x /usr/local/bin/ttyd
+
+#3.检查是否安装成功
+ttyd -v
+
+#4. 可写入式启动
+ttyd --writable -c jef:s1991721 -p 7681 bash
+
+http://树莓派IP:7681
+
+#5. systemd 开机自启动
+sudo nano /etc/systemd/system/ttyd.service
+
+‘’‘
+[Unit]
+Description=ttyd Web Terminal
+After=network.target
+
+[Service]
+User=jef
+Group=jef
+ExecStart=/usr/local/bin/ttyd \
+    --writable \
+    -c jef:s1991721 \
+    -p 7681 \
+    bash
+Restart=always
+RestartSec=3
+
+# ttyd 会一直运行，因此 Type=simple 默认即可
+
+[Install]
+WantedBy=multi-user.target
+’‘’
+
+sudo systemctl daemon-reload
+sudo systemctl enable ttyd
+sudo systemctl start ttyd
+
+systemctl status ttyd
+
+
+
+
+

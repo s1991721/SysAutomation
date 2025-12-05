@@ -1,0 +1,74 @@
+#1.安装 cloudflared
+sudo apt install cloudflared
+
+#2.自动生成域名并推送 GitHub
+sudo nano /usr/local/bin/cloudflare_tunnel.sh
+
+‘’‘
+#!/bin/bash
+
+LOGFILE="/tmp/cloudflared.log"
+URLFILE="/tmp/tunnel_url.txt"
+
+# 启动 cloudflared 临时隧道
+cloudflared tunnel --url http://localhost:80 > $LOGFILE 2>&1 &
+
+# 等待 URL 生成
+sleep 3
+TUNNEL_URL=""
+
+for i in {1..10}; do
+    TUNNEL_URL=$(grep -o "https://[a-zA-Z0-9.-]*\.trycloudflare\.com" $LOGFILE)
+    if [[ -n "$TUNNEL_URL" ]]; then
+        break
+    fi
+    sleep 2
+done
+
+echo "$TUNNEL_URL" > $URLFILE
+
+# 推送到 GitHub
+cd /home/jef/cloudflare-url-repo     # ← 改成你的真实路径
+echo "$TUNNEL_URL" > current_url.txt
+git add current_url.txt
+git commit -m "Update tunnel url" || true
+git push
+
+exit 0
+’‘’
+
+#3.给予执行权限
+sudo chmod +x /usr/local/bin/cloudflare_tunnel.sh
+
+#4.配置 systemd 开机自启
+sudo nano /etc/systemd/system/cloudflare-tunnel.service
+
+‘’‘
+[Unit]
+Description=Cloudflare tunnel with auto GitHub upload
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=jef
+ExecStart=/usr/local/bin/cloudflare_tunnel.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+’‘’
+
+#4.1 刷新 systemd
+sudo systemctl daemon-reload
+
+#4.2 设置开机启动
+sudo systemctl enable cloudflare-tunnel
+
+#4.3 立即启动
+sudo systemctl start cloudflare-tunnel
+
+#4.4 检查服务状态
+systemctl status cloudflare-tunnel
+
+

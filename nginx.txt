@@ -1,0 +1,16 @@
+sudo nano /etc/nginx/sites-enabled/default
+
+location /terminal/ {
+    proxy_pass http://localhost:7681/;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_read_timeout 86400;
+    proxy_set_header Host $host;
+}
+
+
+sudo nginx -t
+
+sudo systemctl reload nginx
+
