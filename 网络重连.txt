@@ -1,0 +1,239 @@
+# 1.确认网卡名
+ip link
+
+# 结果
+wlan0: <BROADCAST,MULTICAST,UP,LOWER_UP> ...
+
+# 2.检测 & 自动重连脚本
+sudo nano /usr/local/bin/wifi_reconnect.sh
+
+
+```
+#!/usr/bin/env bash
+
+WLAN_IF="wlan0"
+CHECK_HOSTS=("github.com" "www.google.com")
+MAX_FAIL=3
+LOG_FILE="/var/log/wifi_reconnect.log"
+
+log() {
+  echo "$(date '+%Y-%m-%d %H:%M:%S')  $1" >> "$LOG_FILE"
+}
+
+check_connectivity() {
+  for host in "${CHECK_HOSTS[@]}"; do
+    if ping -c 1 -W 2 "$host" >/dev/null 2>&1; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+restart_wifi_stack() {
+  log "Restarting Wi-Fi stack..."
+
+  # 1) 确保接口是 up
+  ip link set "$WLAN_IF" up 2>/dev/null || log "Failed to set $WLAN_IF up"
+
+  # 2) 如果是 NetworkManager，就优先用 nmcli
+  if command -v nmcli >/dev/null 2>&1 && systemctl is-active --quiet NetworkManager; then
+    log "Using NetworkManager via nmcli"
+    nmcli radio wifi off
+    sleep 3
+    nmcli radio wifi on
+  fi
+
+  # 3) 重启 wpa_supplicant
+  if systemctl list-unit-files | grep -q "wpa_supplicant@$WLAN_IF.service"; then
+    log "Restarting wpa_supplicant@$WLAN_IF"
+    systemctl restart "wpa_supplicant@$WLAN_IF.service" || log "Failed to restart wpa_supplicant@$WLAN_IF"
+  elif systemctl list-unit-files | grep -q "^wpa_supplicant.service"; then
+    log "Restarting wpa_supplicant"
+    systemctl restart wpa_supplicant.service || log "Failed to restart wpa_supplicant"
+  fi
+
+  # 4) 重启 dhcpcd（如果在用）
+  if systemctl list-unit-files | grep -q "^dhcpcd.service"; then
+    log "Restarting dhcpcd"
+    systemctl restart dhcpcd.service || log "Failed to restart dhcpcd"
+  fi
+}
+
+main() {
+  log "=== Wi-Fi check triggered ==="
+
+  # 先检测几次，避免短暂抖动
+  for i in $(seq 1 "$MAX_FAIL"); do
+    if check_connectivity; then
+      log "Network OK"
+      exit 0
+    fi
+    sleep 2
+  done
+
+  log "Network DOWN detected. Trying to recover..."
+
+  restart_wifi_stack
+
+  # 给系统一点时间重新关联 & 拿 IP
+  sleep 20
+
+  if check_connectivity; then
+    log "Wi-Fi restored. Restarting cloudflare-tunnel.service..."
+    systemctl restart cloudflare-tunnel.service
+  else
+    log "Wi-Fi still DOWN after restart_wifi_stack"
+  fi
+}
+
+main
+
+
+```
+
+# 赋予执行权限
+sudo chmod +x /usr/local/bin/wifi_reconnect.sh
+
+# 测试脚本
+sudo /usr/local/bin/wifi_reconnect.sh
+
+# 查看日志
+sudo tail -n 50 /var/log/wifi_reconnect.log
+
+
+# 3.创建服务
+
+sudo nano /etc/systemd/system/wifi-reconnect.service
+
+```
+[Unit]
+Description=Check Wi-Fi connectivity and reconnect if needed
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/wifi_reconnect.sh
+# 防止腳本執行時間過長
+TimeoutStartSec=300
+
+[Install]
+WantedBy=multi-user.target
+```
+
+sudo systemctl daemon-reload
+sudo systemctl start wifi-reconnect.service
+sudo systemctl status wifi-reconnect.service
+
+
+# 4. 定时器
+sudo nano /etc/systemd/system/wifi-reconnect.timer
+
+```
+[Unit]
+Description=Periodically check Wi-Fi and reconnect if needed
+
+[Timer]
+# 開機後 30 秒開始第一次檢查
+OnBootSec=30
+# 之後每 60 秒檢查一次
+OnUnitActiveSec=60
+Unit=wifi-reconnect.service
+
+[Install]
+WantedBy=timers.target
+
+```
+sudo systemctl daemon-reload
+sudo systemctl enable --now wifi-reconnect.timer
+
+#确认 timer 工作正常
+systemctl list-timers | grep wifi-reconnect
+
+
+# 查看日志 & 排错方式
+查看脚本日志
+sudo tail -n 100 /var/log/wifi_reconnect.log
+
+查看 systemd 日志
+sudo journalctl -u wifi-reconnect.service -u wifi-reconnect.timer -n 100
+
+# 5.开机关闭Wi-Fi 省电模式
+sudo nano /usr/local/bin/wifi_powersave_off.sh
+
+```
+#!/usr/bin/env bash
+
+WLAN_IF="wlan0"
+
+# 關閉 power save（新一代命令）
+if command -v iw >/dev/null 2>&1; then
+  iw dev "$WLAN_IF" set power_save off
+fi
+
+# 如果你的系統還支持 iwconfig，也可以加上：
+if command -v iwconfig >/dev/null 2>&1; then
+  iwconfig "$WLAN_IF" power off 2>/dev/null || true
+fi
+
+```
+
+sudo chmod +x /usr/local/bin/wifi_powersave_off.sh
+
+sudo nano /etc/systemd/system/wifi-powersave-off.service
+
+
+```
+[Unit]
+Description=Disable Wi-Fi power saving on boot
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/wifi_powersave_off.sh
+
+[Install]
+WantedBy=multi-user.target
+
+```
+#启用
+sudo systemctl daemon-reload
+sudo systemctl enable --now wifi-powersave-off.service
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

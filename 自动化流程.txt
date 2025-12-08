@@ -4,14 +4,25 @@ sudo apt install cloudflared
 #2.自动生成域名并推送 GitHub
 sudo nano /usr/local/bin/cloudflare_tunnel.sh
 
-‘’‘
+```
 #!/bin/bash
 
-LOGFILE="/tmp/cloudflared.log"
-URLFILE="/tmp/tunnel_url.txt"
+# 全部放到 jef 的目录里，避免 /tmp 权限问题
+LOGFILE="/home/jef/cloudflare-url-repo/cloudflared.log"
+URLFILE="/home/jef/cloudflare-url-repo/tunnel_url.txt"
+
+# cloudflared 启动命令（如果端口不是 80，在这里改）
+CLOUDFLARED_CMD="cloudflared tunnel --url http://localhost:80"
+
+# 先关旧的 cloudflared
+pkill -f "$CLOUDFLARED_CMD" 2>/dev/null || true
+sleep 3
+
+# （可选）如果你想避免读到旧 URL，可以在这里清空日志：
+: > "$LOGFILE"
 
 # 启动 cloudflared 临时隧道
-cloudflared tunnel --url http://localhost:80 > $LOGFILE 2>&1 &
+$CLOUDFLARED_CMD > "$LOGFILE" 2>&1 &
 
 # 等待 URL 生成
 sleep 3
@@ -35,15 +46,18 @@ git commit -m "Update tunnel url" || true
 git push
 
 exit 0
-’‘’
+```
 
 #3.给予执行权限
+sudo chown jef:jef /usr/local/bin/cloudflare_tunnel.sh
 sudo chmod +x /usr/local/bin/cloudflare_tunnel.sh
+sudo chown -R jef:jef /home/jef/cloudflare-url-repo
+
 
 #4.配置 systemd 开机自启
 sudo nano /etc/systemd/system/cloudflare-tunnel.service
 
-‘’‘
+```
 [Unit]
 Description=Cloudflare tunnel with auto GitHub upload
 After=network-online.target
@@ -52,12 +66,14 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 User=jef
+Group=jef
+WorkingDirectory=/home/jef/cloudflare-url-repo
 ExecStart=/usr/local/bin/cloudflare_tunnel.sh
-RemainAfterExit=yes
+
 
 [Install]
 WantedBy=multi-user.target
-’‘’
+```
 
 #4.1 刷新 systemd
 sudo systemctl daemon-reload
@@ -66,7 +82,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable cloudflare-tunnel
 
 #4.3 立即启动
-sudo systemctl start cloudflare-tunnel
+sudo systemctl start cloudflare-tun	nel
 
 #4.4 检查服务状态
 systemctl status cloudflare-tunnel
