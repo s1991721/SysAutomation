@@ -7,45 +7,44 @@ sudo nano /usr/local/bin/cloudflare_tunnel.sh
 ```
 #!/bin/bash
 
-# 全部放到 jef 的目录里，避免 /tmp 权限问题
 LOGFILE="/home/jef/cloudflare-url-repo/cloudflared.log"
 URLFILE="/home/jef/cloudflare-url-repo/tunnel_url.txt"
 
-# cloudflared 启动命令（如果端口不是 80，在这里改）
-CLOUDFLARED_CMD="cloudflared tunnel --url http://localhost:80"
+# cloudflared 的绝对路径（按你的实际路径改）
+CLOUDFLARED_CMD=("/usr/local/bin/cloudflared" "tunnel" "--url" "http://localhost:80")
 
-# 先关旧的 cloudflared
-pkill -f "$CLOUDFLARED_CMD" 2>/dev/null || true
-sleep 3
-
-# （可选）如果你想避免读到旧 URL，可以在这里清空日志：
+# 清掉旧日志
 : > "$LOGFILE"
 
-# 启动 cloudflared 临时隧道
-$CLOUDFLARED_CMD > "$LOGFILE" 2>&1 &
+# 启动 cloudflared 到后台
+"${CLOUDFLARED_CMD[@]}" >> "$LOGFILE" 2>&1 &
+CF_PID=$!
 
-# 等待 URL 生成
-sleep 3
+# 等一会儿，让它输出 URL
+sleep 5
 TUNNEL_URL=""
 
 for i in {1..10}; do
-    TUNNEL_URL=$(grep -o "https://[a-zA-Z0-9.-]*\.trycloudflare\.com" $LOGFILE)
+    TUNNEL_URL=$(grep -o "https://[a-zA-Z0-9.-]*\.trycloudflare\.com" "$LOGFILE" | head -n 1)
     if [[ -n "$TUNNEL_URL" ]]; then
         break
     fi
     sleep 2
 done
 
-echo "$TUNNEL_URL" > $URLFILE
+if [[ -n "$TUNNEL_URL" ]]; then
+    echo "$TUNNEL_URL" > "$URLFILE"
 
-# 推送到 GitHub
-cd /home/jef/cloudflare-url-repo     # ← 改成你的真实路径
-echo "$TUNNEL_URL" > current_url.txt
-git add current_url.txt
-git commit -m "Update tunnel url" || true
-git push
+    cd /home/jef/cloudflare-url-repo || exit 1
+    echo "$TUNNEL_URL" > current_url.txt
+    git add current_url.txt
+    git commit -m "Update tunnel url" || true
+    git push || true
+fi
 
-exit 0
+# 关键：不要让脚本直接退出，等待 cloudflared 进程
+wait "$CF_PID"
+
 ```
 
 #3.给予执行权限
@@ -64,12 +63,13 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-Type=oneshot
+Type=simple
 User=jef
 Group=jef
 WorkingDirectory=/home/jef/cloudflare-url-repo
 ExecStart=/usr/local/bin/cloudflare_tunnel.sh
-
+Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -82,7 +82,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable cloudflare-tunnel
 
 #4.3 立即启动
-sudo systemctl start cloudflare-tun	nel
+sudo systemctl start cloudflare-tunnel
 
 #4.4 检查服务状态
 systemctl status cloudflare-tunnel
