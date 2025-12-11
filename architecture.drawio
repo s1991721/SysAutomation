@@ -1,0 +1,40 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" version="29.0.3">
+  <diagram name="ページ1" id="p5RcWV96yHqstw8Y4q_s">
+    <mxGraphModel dx="1018" dy="680" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="YRC9ijz5N7duw2bAPCfP-3" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="YRC9ijz5N7duw2bAPCfP-1" target="YRC9ijz5N7duw2bAPCfP-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YRC9ijz5N7duw2bAPCfP-1" value="nginx:80" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="YRC9ijz5N7duw2bAPCfP-2" value="ttyd:7681" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="250" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="YRC9ijz5N7duw2bAPCfP-4" value="wifi-reconnect.service" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="560" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="YRC9ijz5N7duw2bAPCfP-5" value="wifi-reconnect.timer" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="620" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="YRC9ijz5N7duw2bAPCfP-6" value="wifi-powersave-off.service" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="680" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="YRC9ijz5N7duw2bAPCfP-7" value="reboot" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="740" width="720" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="YRC9ijz5N7duw2bAPCfP-8" value="cloudflare_tunnel.sh" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="620" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="YRC9ijz5N7duw2bAPCfP-9" value="cloudflare-tunnel.service" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="680" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="YRC9ijz5N7duw2bAPCfP-10" value="ttyd.service" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="680" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
