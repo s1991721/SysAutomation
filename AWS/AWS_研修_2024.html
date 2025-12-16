@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AWS_研修_2024.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="aws%E7%A0%94%E4%BF%AE%E6%B5%81%E3%82%8C"><strong>AWS研修流れ：</strong></h1>
+<p><strong>・研修期間: 1か月(四週)</strong></p>
+<p><strong>・研修内容:</strong></p>
+<ul>
+<li>理論(サービス概要理解、操作不要)</li>
+<li>ハンズオン(個人アカウントで操作)</li>
+<li>宿題(Slack宿題チャンネルに提出必要)</li>
+</ul>
+<p><strong>・コミュニケーションツール: Slack,Gather</strong></p>
+<h1 id="%E7%AC%AC%E4%B8%80%E9%80%B1%E7%9B%AE"><strong>第一週目：</strong></h1>
+<h2 id="1-aws-clfcertified-cloud-practitioner%E3%82%92%E9%80%9A%E3%81%97%E3%81%A6aws%E4%B8%80%E8%88%AC%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9%E3%82%92%E8%A6%8B%E3%82%8B"><strong>1. AWS CLF(Certified Cloud Practitioner)を通してAWS一般サービスを見る</strong></h2>
+<h3 id="%E7%A0%94%E4%BF%AE%E5%86%85%E5%AE%B9"><strong>研修内容:</strong></h3>
+<ul>
+<li>
+<p>Amazon Web Service概要</p>
+</li>
+<li>
+<p>クラウドでのコンピューティング</p>
+</li>
+<li>
+<p>グローバルインフラストラクチャと信頼性</p>
+</li>
+<li>
+<p>ネットワーク</p>
+</li>
+<li>
+<p>ストレージとデータベース</p>
+</li>
+<li>
+<p>セキュリティ</p>
+</li>
+<li>
+<p>モニタリングと分析</p>
+</li>
+<li>
+<p>料金とサポート</p>
+</li>
+<li>
+<p>移行とイノベーション</p>
+</li>
+<li>
+<p>クラウドジャーニー</p>
+</li>
+<li>
+<p>AWS 認定クラウドプラクティショナーの基本</p>
+</li>
+</ul>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://skillbuilder.aws/learn/94T2BEN85A/aws-cloud-practitioner-essentials-/J3USM8JWUK">リンク</a></li>
+<li>前提条件:AWS SKILL BUILDERのアカウントを有すること
+<ul>
+<li>未作成の場合は<a href="https://www.neclearning.jp/search/supplement/aws/pdf/sBuilder.pdf">こちら</a>の手順通り、アカウントを申請して,UIを日本語化にして上記リンクにアクセスしください。</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-aws%E3%82%88%E3%81%8F%E4%BD%BF%E3%81%86%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9"><strong>2. AWSよく使うサービス：</strong></h2>
+<h3 id="%E7%A0%94%E4%BF%AE%E5%86%85%E5%AE%B9"><strong>研修内容:</strong></h3>
+<ul>
+<li>
+<p>アマゾンウェブサービスの紹介</p>
+</li>
+<li>
+<p>AWS コンピューティング</p>
+</li>
+<li>
+<p>AWS ネットワーキング</p>
+</li>
+<li>
+<p>AWS ストレージ</p>
+</li>
+<li>
+<p>データベース</p>
+</li>
+<li>
+<p>モニタリング、最適化、サーバーレス</p>
+</li>
+</ul>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://skillbuilder.aws/learn/K8C2FNZM6X/aws-technical-essentials-/PG9A5GNNDB">リンク</a></li>
+</ul>
+<h2 id="3-aws%E3%82%A2%E3%82%AB%E3%82%A6%E3%83%B3%E3%83%88%E4%BD%9C%E6%88%90%E3%81%A8iam%E5%9F%BA%E6%9C%AC"><strong>3. AWSアカウント作成とIAM基本</strong></h2>
+<h3 id="%E7%A0%94%E4%BF%AE%E5%86%85%E5%AE%B9"><strong>研修内容:</strong></h3>
+<ul>
+<li>AWSアカウント作成</li>
+<li>Rootユーザ作成</li>
+<li>IAMユーザ作成</li>
+<li>IAMユーザグループ作成</li>
+<li>IAMロール作成</li>
+<li>IAMポリシー作成</li>
+</ul>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://skillbuilder.aws/learn/525X5QYY33/deep-dive-with-security-aws-identity-and-access-management-iam-/AYU5J7GEJK">リンク</a></li>
+</ul>
+<h3 id="%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3"><strong>ハンズオン:</strong></h3>
+<ul>
+<li><a href="https://pages.awscloud.com/JAPAN-event-OE-Hands-on-for-Beginners-1st-Step-2022-confirmation_849.html">リンク</a></li>
+</ul>
+<h3 id="%E5%AE%BF%E9%A1%8C"><strong>宿題:</strong></h3>
+<ul>
+<li>前提条件: Google Authenticatorを個人携帯電話にインストール済み。</li>
+<li>個人アカウントRootユーザとIAMユーザにMFA設定</li>
+</ul>
+<h2 id="4-%E3%82%A2%E3%82%AB%E3%82%A6%E3%83%B3%E3%83%88%E4%BD%9C%E6%88%90%E5%BE%8C%E3%81%99%E3%81%90%E3%82%84%E3%82%8B%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E5%AF%BE%E7%AD%96"><strong>4. アカウント作成後すぐやるセキュリティ対策</strong></h2>
+<h3 id="%E7%A0%94%E4%BF%AE%E5%86%85%E5%AE%B9"><strong>研修内容:</strong></h3>
+<ul>
+<li>AWS Identity &amp; Access Management</li>
+<li>AWS CloudTrail</li>
+<li>AWS Config</li>
+<li>Amazon GuardDuty</li>
+<li>AWS Trusted Advisor</li>
+<li>AWS Budgets</li>
+<li>AWS CostExplorer</li>
+<li>AWS Cost &amp; Usage Reports</li>
+</ul>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://skillbuilder.aws/learn/C46ZW9PBV6/trails-for-aws-cloudtrail-getting-started-/8TJQEG1BJG">CloudTrailリンク</a></li>
+<li><a href="https://skillbuilder.aws/learn/HUGPFMV5AJ/getting-started-with-aws-config-/EJEJRUNPKX">AWS Configリンク</a></li>
+</ul>
+<h3 id="%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3"><strong>ハンズオン:</strong></h3>
+<ul>
+<li><a href="https://pages.awscloud.com/JAPAN-event-OE-Hands-on-for-Beginners-Security-1-2022-confirmation_556.html">リンク</a></li>
+</ul>
+<h3 id="%E5%AE%BF%E9%A1%8C"><strong>宿題:</strong></h3>
+<ul>
+<li>個人アカウントにRootユーザでコストアラーム作成してください、金額を5ドルにして設定、設定成功メールを受信できるを確認。</li>
+<li>コストアラーム設定<a href="https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/monitoring/monitor_estimated_charges_with_cloudwatch.html">参照リンク</a></li>
+</ul>
+<h2 id="5%E3%83%8D%E3%83%83%E3%83%88%E3%83%AF%E3%83%BC%E3%82%AF"><strong>5.ネットワーク</strong></h2>
+<h3 id="%E7%A0%94%E4%BF%AE%E5%86%85%E5%AE%B9"><strong>研修内容:</strong></h3>
+<ul>
+<li>VPC作成</li>
+<li>サブネット作成</li>
+<li>インターネットゲートウェイ作成</li>
+<li>ルートテーブル作成</li>
+<li>NATゲートウェイ作成</li>
+<li>セキュリティグループ作成</li>
+<li>エンドポイント作成</li>
+</ul>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://skillbuilder.aws/learn/YHWW7BTY89/amazon-virtual-private-cloud-amazon-vpc--troubleshooting-/BKKK2CV51S">VPCリンク</a></li>
+</ul>
+<h3 id="%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3"><strong>ハンズオン:</strong></h3>
+<ul>
+<li><a href="https://pages.awscloud.com/JAPAN-event-OE-Hands-on-for-Beginners-Network1-2022-confirmation_945.html">リンク</a></li>
+</ul>
+<h3 id="%E5%AE%BF%E9%A1%8C"><strong>宿題:</strong></h3>
+<ul>
+<li>東京リージョンでVPC一台、パブリックサブネット2台、プライベートサブネット4台、インターネットゲートウェイ1台、パブリックルートテーブル１台,プライベート4台,</li>
+<li>これまで勉強した内容を図面化して提出する、図面描くツールは以下の<a href="https://aws.amazon.com/jp/architecture/icons/">リンク</a>からdraw.ioに入って図面描く。</li>
+</ul>
+<h1 id="%E7%AC%AC%E4%BA%8C%E9%80%B1%E7%9B%AE"><strong>第二週目：</strong></h1>
+<h2 id="1web%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3"><strong>1.Webアプリケーション</strong></h2>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://skillbuilder.aws/learn/72MYSKW681/getting-started-with-application-load-balancer-/TTQNYAWGJ9">ALBリンク</a></li>
+<li><a href="https://skillbuilder.aws/learn/DWYSUVJ5RQ/getting-started-with-network-load-balancer-nlb-/V67CXPW3PG">NLBリンク</a></li>
+<li><a href="https://skillbuilder.aws/learn/V59J92TZE2/amazon-ec2-basics-/2NPJBSC4QY">EC2リンク</a></li>
+<li><a href="https://skillbuilder.aws/learn/FPD37ZDEBU/amazon-aurora-mysql--basics-/B5C6RGPRAX">RDSリンク</a>(時間が長いため、ざっと見ればいいと思う)</li>
+</ul>
+<h3 id="%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3"><strong>ハンズオン:</strong></h3>
+<ul>
+<li><a href="https://pages.awscloud.com/JAPAN-event-OE-Hands-on-for-Beginners-Scalable-2022-confirmation_386.html">リンク</a></li>
+</ul>
+<h3 id="%E5%AE%BF%E9%A1%8C%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6"><strong>宿題前提条件：</strong></h3>
+<ul>
+<li>Amazon Linux 2023ベースでEC2作成済み。</li>
+<li>Windows Server2019ベースでEC2作成済み。</li>
+<li>セキュリティーグループ作成済み。</li>
+<li>個人作業PCでssh接続クライアントインストール、Windowsの場合Rlogin(おすすめ),Terraterm,Putty,Winscp、MACの場合tabbyインストール済み。</li>
+</ul>
+<h3 id="%E5%AE%BF%E9%A1%8C"><strong>宿題:</strong></h3>
+<ul>
+<li>
+<p>宿題①:踏み台サーバ構築(Amazon Linux 2023ベース)</p>
+<ul>
+<li>既存手順書参照(踏み台サーバ構築手順.xlsm)</li>
+</ul>
+</li>
+<li>
+<p>宿題②:プロキシーサーバ構築(Amazon Linux 2023ベース)</p>
+<ul>
+<li>既存手順書参照(プロキシーサーバ構築手順.xlsm)</li>
+</ul>
+</li>
+<li>
+<p>宿題③:linuxコマンドをリンクから操作して、覚えてください。<a href="https://udemy.benesse.co.jp/development/system/linux-command.html">リンク</a></p>
+<ul>
+<li>ディレクトリ・ファイル操作:</li>
+<li>ユーザ管理操作:</li>
+<li>システム管理操作:</li>
+<li>ネットワーク関連操作:</li>
+<li>テキスト処理操作:</li>
+<li>その他:</li>
+</ul>
+</li>
+<li>
+<p>宿題④:OS設定</p>
+<ul>
+<li>タイムゾーンをAsia/Tokyoに変更する</li>
+<li>ロケールをLANG=ja_JP.UTF-8に変更する</li>
+<li>SELinuxの設定を無効化</li>
+<li>ホスト名を(okg-dev-ec2-training-web)にする</li>
+<li>SSHの設定でパスワード認証を有効にする。</li>
+<li>ログローテーションの設定の保持期間を8週にする。</li>
+<li>Firewallの無効化</li>
+</ul>
+</li>
+<li>
+<p>宿題⑤:windows　webサーバ構築(Windows Server2019ベース)</p>
+</li>
+</ul>
+<h2 id="2%E7%9B%A3%E8%A6%96%E7%B7%A8-%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%AE%E3%83%A2%E3%83%8B%E3%82%BF%E3%83%AA%E3%83%B3%E3%82%B0%E3%81%AE%E5%9F%BA%E6%9C%AC%E3%82%92%E5%AD%A6%E3%81%BC%E3%81%86"><strong>2.監視編 サーバーのモニタリングの基本を学ぼう</strong></h2>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://skillbuilder.aws/learn/H5K7BTCH6K/introduction-to-amazon-cloudwatch-logs-/C8X1W2REDF">リンク</a></li>
+</ul>
+<h3 id="%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3"><strong>ハンズオン:</strong></h3>
+<ul>
+<li><a href="https://pages.awscloud.com/JAPAN-event-OE-Hands-on-for-Beginners-monitoring-2022-confirmation_223.html">リンク</a></li>
+</ul>
+<h2 id="3amazon-ec2-auto-scaling"><strong>3.Amazon EC2 Auto Scaling</strong></h2>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html">リンク</a></li>
+</ul>
+<h3 id="%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3"><strong>ハンズオン:</strong></h3>
+<ul>
+<li><a href="https://pages.awscloud.com/JAPAN-event-OE-Hands-on-for-Beginners-Auto_Scaling-2022-confirmation_842.html">リンク</a></li>
+</ul>
+<h3 id="%E5%AE%BF%E9%A1%8C"><strong>宿題:</strong></h3>
+<ul>
+<li>これまで勉強した内容を図面化して提出する。</li>
+</ul>
+<h1 id="%E7%AC%AC%E4%B8%89%E9%80%B1%E7%9B%AE"><strong>第三週目：</strong></h1>
+<h2 id="1-aws-%E4%B8%8A%E3%81%A7%E9%9D%99%E7%9A%84%E3%81%AA-web-%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92%E5%85%AC%E9%96%8B"><strong>1. AWS 上で静的な Web サイトを公開</strong></h2>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li>
+<p><a href="https://skillbuilder.aws/learn/CD3WUQ3YAW/amazon-simple-storage-service-amazon-s3-essentials--beyond-the-basics-/U1C1322DB1">S3リンク</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/ja_jp/AmazonCloudFront/latest/DeveloperGuide/Introduction.html">CloudFrontリンク</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/ja_jp/Route53/latest/DeveloperGuide/welcome-domain-registration.html">Route53リンク</a></p>
+</li>
+<li>
+<p><a href="https://docs.aws.amazon.com/ja_jp/acm/latest/userguide/acm-overview.html">ACMリンク</a></p>
+</li>
+</ul>
+<h3 id="%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3"><strong>ハンズオン:</strong></h3>
+<ul>
+<li><a href="https://pages.awscloud.com/JAPAN-event-OE-Hands-on-for-Beginners-StaticWebsiteHosting-2022-confirmation_254.html">リンク</a></li>
+</ul>
+<h2 id="2-amazon-cloudfront%E3%81%8A%E3%82%88%E3%81%B3aws-waf%E3%82%92%E7%94%A8%E3%81%84%E3%81%A6-%E3%82%A8%E3%83%83%E3%82%B8%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9%E3%81%AE%E6%B4%BB%E7%94%A8%E6%96%B9%E6%B3%95%E3%82%92%E5%AD%A6%E3%81%BC%E3%81%86"><strong>2. Amazon CloudFrontおよびAWS WAFを用いて エッジサービスの活用方法を学ぼう</strong></h2>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://skillbuilder.aws/learn/GQA6FHWPJD/amazon-api-gateway-for-serverless-applications-/S2CSC9WJN5">API-Gatewayリンク</a></li>
+<li><a href="https://skillbuilder.aws/learn/XHRS91KKK6/aws-lambda-foundations-/R69MER3K55">lambdaリンク</a></li>
+<li><a href="https://docs.aws.amazon.com/ja_jp/waf/latest/developerguide/waf-chapter.html">WAFリンク</a></li>
+</ul>
+<h3 id="%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3"><strong>ハンズオン:</strong></h3>
+<ul>
+<li><a href="https://pages.awscloud.com/JAPAN-event-OE-Hands-on-for-Beginners-CF_WAF-2022-confirmation_129.html">リンク</a></li>
+</ul>
+<h2 id="3docker%E3%82%92%E5%AD%A6%E3%81%B6"><strong>3.Dockerを学ぶ</strong></h2>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://y-ohgi.com/introduction-docker/1_introduction/docker/">リンク</a></li>
+</ul>
+<h3 id="%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3"><strong>ハンズオン:</strong></h3>
+<ul>
+<li><a href="https://pages.awscloud.com/JAPAN-event-OE-Hands-on-for-Beginners-ECS-2022-confirmation_012.html">リンク</a></li>
+</ul>
+<h2 id="4cicd%E3%82%92%E5%AD%A6%E3%81%B6"><strong>4.CICDを学ぶ</strong></h2>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://docs.aws.amazon.com/ja_jp/codecommit/latest/userguide/welcome.html">codecommitリンク</a></li>
+<li><a href="https://docs.aws.amazon.com/ja_jp/codebuild/latest/userguide/concepts.html">codebuildリンク</a></li>
+<li><a href="https://docs.aws.amazon.com/ja_jp/codedeploy/latest/userguide/welcome.html">CodeDeployリンク</a></li>
+<li><a href="https://docs.aws.amazon.com/ja_jp/codepipeline/latest/userguide/welcome.html">CodePipelineリンク</a></li>
+</ul>
+<h3 id="%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3"><strong>ハンズオン:</strong></h3>
+<ul>
+<li><a href="https://pages.awscloud.com/JAPAN-event-OE-Hands-on-for-Beginners-cicd-2022-confirmation_484.html">リンク</a></li>
+</ul>
+<h2 id="5git%E3%82%92%E5%AD%A6%E3%81%B6"><strong>5.gitを学ぶ</strong></h2>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://www.youtube.com/playlist?list=PLh6V6_7fbbo_M3CqTeJvuXB08--fibyBu">リンク</a></li>
+</ul>
+<h3 id="%E5%AE%BF%E9%A1%8C"><strong>宿題:</strong></h3>
+<ul>
+<li>ローカル環境でローカルレポジトリ作成</li>
+<li>HTTPS認証設定</li>
+<li>SSH認証設定</li>
+<li>一時的ファイル作成してリモートレポジトリにpushする</li>
+<li>ローカルで新規ブランチ作成してリモートレポジトリで同じく新規ブランチにpush</li>
+<li>これまで勉強した内容を図面化して提出する。</li>
+</ul>
+<h1 id="%E7%AC%AC%E5%9B%9B%E9%80%B1%E7%9B%AE"><strong>第四週目：</strong></h1>
+<h2 id="1terraform%E3%81%AE%E5%8B%89%E5%BC%B7"><strong>1.Terraformの勉強</strong></h2>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://developer.hashicorp.com/terraform/tutorials/aws-get-started">リンク</a></li>
+</ul>
+<h3 id="%E5%AE%BF%E9%A1%8C"><strong>宿題:</strong></h3>
+<ul>
+<li>ローカル環境にTerraformをインストール</li>
+<li>AWS CLI設定</li>
+<li>AWSリソースをTerraformで構築(VPC,EC2)</li>
+</ul>
+<h2 id="2cloudformation%E3%81%AE%E5%8B%89%E5%BC%B7"><strong>2.Cloudformationの勉強</strong></h2>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=4dyiPsYXG8I">リンク</a></li>
+<li><a href="https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/template-reference.html">ドキュメントリンク</a></li>
+</ul>
+<h3 id="%E5%AE%BF%E9%A1%8C"><strong>宿題:</strong></h3>
+<ul>
+<li>AWSリソースをCloudformationで構築(VPC,EC2)</li>
+</ul>
+<h2 id="3shellscriptpowershell"><strong>3.ShellScript、PowerShell</strong></h2>
+<h3 id="%E7%90%86%E8%AB%96"><strong>理論:</strong></h3>
+<ul>
+<li><a href="https://www.youtube.com/playlist?list=PLk_jtuUlslSR6V1s2WSG8dLhnLSoe_B9i">PowerShellリンク</a></li>
+<li><a href="https://www.youtube.com/watch?v=7XNmLlWVG7I">ShellScriptリンク</a></li>
+</ul>
+<h3 id="%E5%AE%BF%E9%A1%8C"><strong>宿題:</strong></h3>
+<ul>
+<li>宿題①:
+<ul>
+<li>Shell無料オンライン練習環境<a href="https://www.sakura.ad.jp/services/cloudshell/">リンク</a>[無料で試す]ボタンを押す</li>
+<li>&quot;Hello World&quot;を表示するスクリプト作成</li>
+<li>ログインユーザ名、時間、システムバージョン表示スクリプト作成</li>
+</ul>
+</li>
+<li>宿題②:
+<ul>
+<li>PowerShellスクリプトで新規フォルダ作成、その中に新規ファイル追加</li>
+</ul>
+</li>
+<li>宿題③:
+<ul>
+<li>これまで勉強した内容を図面化して提出する。</li>
+</ul>
+</li>
+</ul>
+
+</body>
+</html>
